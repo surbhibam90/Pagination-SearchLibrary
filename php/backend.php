@@ -1,8 +1,7 @@
 <?php
+	require_once('../search_library/search.php');
 
-	require_once('/Applications/MAMP/htdocs/Mock_test_1/search_library/search.php');
-
-	require_once('/Applications/MAMP/htdocs/Mock_test_1/pagination1.0/prepared_query.php');
+	require_once('../pagination1.0/prepared_query.php');
 
 
 	$application_obj = new ManageApp();
@@ -11,10 +10,13 @@
 
 	$application_obj->Myconnection ($connection_mock_chat,"localhost","root","Mock_test_db");
 	$table_heading_name=array('Name','Email','Phone Number','Gender');
-	$table_column_name=array('name','email','phoneNum','gender');
+	//$table_column_name=array('name','email','phoneNum','gender');
+	$table_column_name=array('Name','Email','Phone','Gender');
 	$where=1;
+	
 	if($_POST['request'] == 'data')
 	{  
+		//echo "data"; die();
 		global $connection_mock_chat;
 	    $buffer_range=json_decode($_POST['buffer_data']);
 	    $data_per_page=$_POST['data_per_page'];
@@ -33,6 +35,7 @@
 	}
 	elseif ($_POST['request']=='search') 
 	{   
+		//echo "search"; die();
 		global $connection_mock_chat;
 		global $application_obj;
 	    $params=array();
@@ -44,7 +47,10 @@
 	    $response_data=array();
 	    $obj=new searching($input,$connection_mock_chat);
 	    $keys=array('type','table_name','search_col_name','get_colms','get_id');
-	    $value=array(array('string','login_db.mock_test_tbl','name','null as name,id,null as email,null as phone,null as gender','id'));
+	    $value=array(
+	    	array('string','mock_test_tbl','name','name, id, email, phone, gender','id'),
+	    	array('email','mock_test_tbl','email','name, id, email, phone, gender','id')
+	    );
 	    $query_data=array();
 
 	    foreach ($value as $key => $value1) 
@@ -66,7 +72,7 @@
 	    $where_data=$obj->searching_data($get_ids);
 
 	    $table_from=array("table_name_id","table_name_email");
-	    $table1_to=array("login_db.mock_test_tbl","login_db.mock_test_tbl");
+	    $table1_to=array("mock_test_tbl","mock_test_tbl");
 	    $tble1=str_replace($table_from, $table1_to, $where_data);
 
 	    if($tble1=='')
@@ -181,7 +187,7 @@
 	        $total_length=$total_row[0]['total_row'];
 	        $max_page=ceil($total_length/$data_per_page);
 		        
-		    $query="SELECT * FROM mock_test_tbl WHERE ".$where."  LIMIT ?,?";
+		    $query="SELECT * FROM mock_test_tbl WHERE ".$where; //."  LIMIT ?,?";
 		    	
 		    $params = array($data_from,$data_to);
 
@@ -204,6 +210,7 @@
 		                $response[]=$res_here;   
 		            }
 		        } 
+		        //print_r($response);
 		        return $response;
 		}
 
