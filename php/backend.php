@@ -187,7 +187,7 @@
 	        $total_length=$total_row[0]['total_row'];
 	        $max_page=ceil($total_length/$data_per_page);
 		        
-		    $query="SELECT * FROM mock_test_tbl WHERE ".$where; //."  LIMIT ?,?";
+		    $query="SELECT * FROM mock_test_tbl WHERE ".$where."  LIMIT ?,?";
 		    	
 		    $params = array($data_from,$data_to);
 
